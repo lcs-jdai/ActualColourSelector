@@ -15,6 +15,7 @@ struct SavedPalettesView: View {
     // our list of monochromatic colours
     @Binding var savedPalettes: [SavedPalette]
     
+    @State private var selectionMade = false
     
     //MARK: Computed Properties
     private var hue: Double{
@@ -59,15 +60,27 @@ struct SavedPalettesView: View {
                 Spacer()
                 Button(action: {
                     selectedHue = 0.0
+                    selectionMade = false
                     print("Resetting")
                 }, label: {
                     Text("Reset")
                 })
             }
            
-            List(filtered(by: hue, from: savedPalettes)) { palette in
+            List(filtered(by: hue, from: savedPalettes, selectionActive: selectionMade)) { palette in
                 MonochromaticPaletteView(hue: palette.hue, showTitle: false)
             }
+        }
+        .padding()
+        .onChange(of: selectedHue) { newValue in
+            
+            if newValue > 0 {
+                selectionMade = true
+            }
+            
+            selectionMade = true
+            print("A selection has been made")
+            
         }
     }
     //MARK: Functions(Actions, Logics....)
